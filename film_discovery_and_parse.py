@@ -83,6 +83,24 @@ def _convert_date_to_datetime(date_str):
     return date_str  # Return original if conversion fails
 
 
+def _extract_age_from_restriction(age_restriction_str):
+    """Extract age number from age restriction string."""
+    if pd.isna(age_restriction_str) or age_restriction_str is None or age_restriction_str == '':
+        return None
+    
+    try:
+        # Look for patterns like "0+", "6+", "12+", "16+", "18+"
+        pattern = r'(\d+)\+'
+        match = re.search(pattern, str(age_restriction_str))
+        
+        if match:
+            return int(match.group(1))
+    except:
+        pass
+    
+    return None
+
+
 async def search_films_with_browser(start_date: str = "01 авг 2025", end_date: str = "25 авг 2025") -> List[str]:
     """
     Browser automation to search for films and collect their URLs.
@@ -227,6 +245,10 @@ def save_results(results, report):
     # Convert start_date to datetime format (YYYY-MM-DD)
     if 'start_date' in results_df.columns:
         results_df['start_date'] = results_df['start_date'].apply(_convert_date_to_datetime)
+    
+    # Extract age number from age_restriction and create new column
+    if 'age_restriction' in results_df.columns:
+        results_df['age'] = results_df['age_restriction'].apply(_extract_age_from_restriction)
     
     # Add current date columns
     results_df['parsing_date'] = current_date
