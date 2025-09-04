@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - 2025-01-15
+## [0.1.0] - 2025-09-04
 
 ### Added
 - Initial release of film discovery and parsing system
