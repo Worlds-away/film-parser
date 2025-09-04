@@ -176,3 +176,35 @@ playwright install chromium
 - `film_discovery_results_*.csv` - Generated results files
 - `film_discovery_report_*.txt` - Generated report files
 
+## 📄 Example Output
+
+### CSV Results Sample:
+```
+title_name,total_fees,country,start_date,year,success_rate
+"Фильм 1","1,234,567 руб","Россия","01.08.2025","2025",99.2%
+"Фильм 2","987,654 руб","США","15.08.2025","2025",99.2%
+```
+
+### Report Sample:
+```
+Total URLs: 150
+Successful: 149 (99.3%)
+Failed: 1 (0.7%)
+Average parse time: 2.1s
+```
+
+## ⚖️ Responsible Usage
+
+**Please use this tool ethically:**
+- Respect the target website's terms of service
+- Use reasonable delays between requests (default settings are server-friendly)
+- Don't overwhelm servers with excessive concurrent requests
+- Consider reaching out to site owners for permission if scraping large datasets
+- This tool is intended for research, journalism, and educational purposes
+
+**The parser includes built-in protections:**
+- Adaptive rate limiting based on server response
+- Respectful delays between batches
+- Browser-like request headers
+- Automatic retry with exponential backoff
+
