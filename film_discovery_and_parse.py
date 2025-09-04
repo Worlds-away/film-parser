@@ -21,7 +21,70 @@ import pandas as pd
 from datetime import datetime
 from typing import List, Dict, Tuple
 from playwright.async_api import async_playwright
-from ultra_reliable_parser import UltraReliableParser
+from page_parser import UltraReliableParser
+import re
+
+
+def _convert_fees_to_int(fee_str):
+    """Convert fee string to integer (remove spaces, commas, currency)."""
+    if pd.isna(fee_str) or fee_str is None or fee_str == '':
+        return None
+    
+    # Remove all non-digit characters except spaces and commas
+    clean_str = re.sub(r'[^\d\s,]', '', str(fee_str))
+    # Remove spaces and commas
+    clean_str = re.sub(r'[\s,]', '', clean_str)
+    
+    try:
+        return int(clean_str) if clean_str else None
+    except ValueError:
+        return None
+
+
+def _convert_date_to_datetime(date_str):
+    """Convert Russian date string to YYYY-MM-DD format."""
+    if pd.isna(date_str) or date_str is None or date_str == '':
+        return None
+    
+    # Russian month mapping
+    month_map = {
+        'янв': '01', 'января': '01',
+        'фев': '02', 'февраля': '02',
+        'мар': '03', 'марта': '03',
+        'апр': '04', 'апреля': '04',
+        'май': '05', 'мая': '05',
+        'июн': '06', 'июня': '06',
+        'июл': '07', 'июля': '07',
+        'авг': '08', 'августа': '08',
+        'сен': '09', 'сентября': '09',
+        'окт': '10', 'октября': '10',
+        'ноя': '11', 'ноября': '11',
+        'дек': '12', 'декабря': '12'
+    }
+    
+    try:
+        # Try to match patterns like "01 авг 2025" or "1 августа 2025"
+        pattern = r'(\d{1,2})\s+(\w+)\s+(\d{4})'
+        match = re.search(pattern, str(date_str))
+        
+        if match:
+            day = match.group(1).zfill(2)  # Pad with zero if needed
+            month_name = match.group(2).lower()
+            year = match.group(3)
+            
+            # Find month number
+            month = None
+            for key, value in month_map.items():
+                if key in month_name:
+                    month = value
+                    break
+            
+            if month:
+                return f"{year}-{month}-{day}"
+    except:
+        pass
+    
+    return date_str  # Return original if conversion fails
 
 
 async def search_films_with_browser(start_date: str = "01 авг 2025", end_date: str = "25 авг 2025") -> List[str]:
@@ -158,6 +221,16 @@ def save_results(results, report):
     # Save results to CSV
     csv_filename = f"film_discovery_results_{timestamp}.csv"
     results_df = pd.DataFrame([r.to_dict() for r in results])
+    
+    # Convert fee columns from strings to integers
+    fee_columns = ['total_fees', 'presales_fees', 'premiere_day_fees', 'first_weekend_fees', 'second_weekend_fees']
+    for col in fee_columns:
+        if col in results_df.columns:
+            results_df[col] = results_df[col].apply(_convert_fees_to_int)
+    
+    # Convert start_date to datetime format (YYYY-MM-DD)
+    if 'start_date' in results_df.columns:
+        results_df['start_date'] = results_df['start_date'].apply(_convert_date_to_datetime)
     
     # Add current date columns
     results_df['parsing_date'] = current_date
