@@ -46,25 +46,25 @@ def _convert_date_to_datetime(date_str):
     if pd.isna(date_str) or date_str is None or date_str == '':
         return None
     
-    # Russian month mapping
+    # Russian month mapping (including abbreviated forms with periods)
     month_map = {
-        'янв': '01', 'января': '01',
-        'фев': '02', 'февраля': '02',
-        'мар': '03', 'марта': '03',
-        'апр': '04', 'апреля': '04',
-        'май': '05', 'мая': '05',
-        'июн': '06', 'июня': '06',
-        'июл': '07', 'июля': '07',
-        'авг': '08', 'августа': '08',
-        'сен': '09', 'сентября': '09',
-        'окт': '10', 'октября': '10',
-        'ноя': '11', 'ноября': '11',
-        'дек': '12', 'декабря': '12'
+        'янв': '01', 'янв.': '01', 'января': '01',
+        'фев': '02', 'фев.': '02', 'февраля': '02',
+        'мар': '03', 'мар.': '03', 'марта': '03',
+        'апр': '04', 'апр.': '04', 'апреля': '04',
+        'май': '05', 'май.': '05', 'мая': '05',
+        'июн': '06', 'июн.': '06', 'июня': '06',
+        'июл': '07', 'июл.': '07', 'июля': '07',
+        'авг': '08', 'авг.': '08', 'августа': '08',
+        'сен': '09', 'сен.': '09', 'сентября': '09',
+        'окт': '10', 'окт.': '10', 'октября': '10',
+        'ноя': '11', 'ноя.': '11', 'ноября': '11',
+        'дек': '12', 'дек.': '12', 'декабря': '12'
     }
     
     try:
-        # Try to match patterns like "01 авг 2025" or "1 августа 2025"
-        pattern = r'(\d{1,2})\s+(\w+)\s+(\d{4})'
+        # Try to match patterns like "28 авг. 2025", "01 авг 2025" or "1 августа 2025"
+        pattern = r'(\d{1,2})\s+(\w+\.?)\s+(\d{4})'
         match = re.search(pattern, str(date_str))
         
         if match:
@@ -73,11 +73,7 @@ def _convert_date_to_datetime(date_str):
             year = match.group(3)
             
             # Find month number
-            month = None
-            for key, value in month_map.items():
-                if key in month_name:
-                    month = value
-                    break
+            month = month_map.get(month_name)
             
             if month:
                 return f"{year}-{month}-{day}"
@@ -187,7 +183,7 @@ async def parse_films_with_ultra_reliable(film_urls: List[str],
         print("No URLs to parse!")
         return []
     
-    print(f"\nStarting ultra-reliable parsing of {len(film_urls)} URLs...")
+    print(f"\nStarting parsing of {len(film_urls)} URLs...")
     
     # Configure ultra-reliable parser with provided options
     async with UltraReliableParser(

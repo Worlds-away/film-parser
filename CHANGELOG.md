@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2025-09-04
+
+### Changed
+- **Data Type Improvements**: Fee columns now converted to integers (removing currency symbols, spaces, commas)
+- **Date Format Standardization**: start_date now formatted as YYYY-MM-DD (e.g., "28 авг. 2025" → "2025-08-28")
+- **Enhanced Russian Date Parsing**: Added support for abbreviated month names with periods (авг., дек., etc.)
+
+### Technical
+- Added `_convert_fees_to_int()` function for proper numeric data types
+- Added `_convert_date_to_datetime()` function with comprehensive Russian month mapping
+- Data conversion happens during CSV export for clean output format
+
 ## [0.1.0] - 2025-09-04
 
 ### Added
