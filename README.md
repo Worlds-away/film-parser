@@ -1,6 +1,6 @@
-# Film Discovery and Ultra-Reliable Parser
+# Film Discovery and parser
 
-A comprehensive Python system for discovering and parsing film information from ekinobilet.fond-kino.ru with ultra-reliable parsing capabilities and browser automation.
+A comprehensive Python system for discovering and parsing film information from ekinobilet.fond-kino.ru with parsing capabilities and browser automation.
 
 ## 🎯 Features
 
