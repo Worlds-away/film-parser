@@ -19,30 +19,30 @@ async def main():
     # ==========================================
     
     # DATE RANGE SETTINGS FOR TEST
-    TEST_START_DATE = "20 авг 2025"      # Test start date
-    TEST_END_DATE = "30 авг 2025"        # Test end date
+    START_DATE = "11 сент 2025"      # Test start date
+    END_DATE = "20 сент 2025"        # Test end date
     
     # PARSER SETTINGS FOR TEST
-    TEST_BATCH_SIZE = 20                 # URLs per batch 
-    TEST_BATCH_PAUSE = 1.0              # Pause between batches (seconds)
-    TEST_MAX_CONCURRENT = 10             # Max concurrent requests
-    TEST_MAX_RETRIES = 3                # Max retry attempts per URL
+    BATCH_SIZE = 20                 # URLs per batch 
+    BATCH_PAUSE = 1.0              # Pause between batches (seconds)
+    MAX_CONCURRENT = 10             # Max concurrent requests
+    MAX_RETRIES = 3                # Max retry attempts per URL
     
     # ==========================================
     
     print("Running with test configuration:")
-    print(f"  Date range: {TEST_START_DATE} to {TEST_END_DATE}")
-    print(f"  Parser: batch_size={TEST_BATCH_SIZE}, max_concurrent={TEST_MAX_CONCURRENT}")
+    print(f"  Date range: {START_DATE} to {END_DATE}")
+    print(f"  Parser: batch_size={BATCH_SIZE}, max_concurrent={MAX_CONCURRENT}")
     print()
     
     # Run the full workflow with test settings
     await run_film_discovery_and_parse(
-        start_date=TEST_START_DATE,
-        end_date=TEST_END_DATE,
-        batch_size=TEST_BATCH_SIZE,
-        batch_pause=TEST_BATCH_PAUSE,
-        max_concurrent=TEST_MAX_CONCURRENT,
-        max_retries=TEST_MAX_RETRIES
+        start_date=START_DATE,
+        end_date=END_DATE,
+        batch_size=BATCH_SIZE,
+        batch_pause=BATCH_PAUSE,
+        max_concurrent=MAX_CONCURRENT,
+        max_retries=MAX_RETRIES
     )
     
     print("\n✅ Test completed!")
